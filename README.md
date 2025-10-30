@@ -27,21 +27,31 @@ pip install auto-crop
 ### From Source Code
 
 ```shell
-# colone repository
+# clone repository
 git clone https://github.com/lih627/autocrop.git
 # install autocrop
 cd /path/to/autocrop
 python setup.py install
 ```
 
-**Note** : If there is errors when compiling CPP and CUDA extensions, you can choose to compile CPP/CUDA api separately.
+**Note**: If there are errors when compiling CPP and CUDA extensions, you can choose to compile CPP/CUDA api separately.
 
 ```shell
 cd autocrop/model/rod_align
 python setup.py install
-cd ../roi_aligm
+cd ../roi_align
 python setup.py install
 ```
+
+### Face Detection Model
+
+If you plan to use face detection (`use_face_detector=True`), you'll need the DSFD face detection model. The original download URL is no longer available, but you can download it from HuggingFace using the provided script:
+
+```shell
+python download_face_model.py
+```
+
+This will download the model (~459MB) from HuggingFace and place it in the PyTorch cache directory. Alternatively, you can manually download it from [https://huggingface.co/zixianma/mma/blob/main/WIDERFace_DSFD_RES152.pth](https://huggingface.co/zixianma/mma/blob/main/WIDERFace_DSFD_RES152.pth) and place it at `~/.cache/torch/hub/checkpoints/WIDERFace_DSFD_RES152.pth`.
 
 ## Demo
 
