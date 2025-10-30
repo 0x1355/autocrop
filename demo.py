@@ -19,7 +19,7 @@ crop_ret = autocropper.crop(img_,
                             single_face_center=True)
 # save crop img
 for idx, bbox in enumerate(crop_ret):
-    cv2.imwrite('ret_{}.jpg'.format(idx), img[bbox[1]: bbox[3] + 1, bbox[0]: bbox[2] + 1, :])
+    cv2.imwrite('ret_{}.png'.format(idx), img[bbox[1]: bbox[3] + 1, bbox[0]: bbox[2] + 1, :])
 # show crop ret
 for bbox in crop_ret:
     r, g, b = int(random.random() * 255), int(random.random() * 255), int(random.random() * 255)

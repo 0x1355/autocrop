@@ -86,14 +86,14 @@ def bbox_visualization(img_path='imgs/demo.jpg',
     cv2.imshow('No Filter, {} Face, {} BBoxes'.format(len(face_bboxes),
                                                       len(source_bboxes)),
                img1)
-    cv2.imwrite('No Filter, {} Face, {} BBoxes.jpg'.format(len(face_bboxes),
+    cv2.imwrite('No Filter, {} Face, {} BBoxes.png'.format(len(face_bboxes),
                                                            len(source_bboxes)),
                 img1)
     ret1 = crop_func_partial(filter_face=False,
                              single_face_center=False)
     bbox = ret1[0]
     cv2.imshow("ret1", img[bbox[1]: bbox[3] + 1, bbox[0]: bbox[2] + 1, :])
-    cv2.imwrite("ret1.jpg", img[bbox[1]: bbox[3] + 1, bbox[0]: bbox[2] + 1, :])
+    cv2.imwrite("ret1.png", img[bbox[1]: bbox[3] + 1, bbox[0]: bbox[2] + 1, :])
     """
     Filter Face
     """
@@ -107,7 +107,7 @@ def bbox_visualization(img_path='imgs/demo.jpg',
     cv2.imshow('Filter Face, {} Face, {} BBoxes'.format(len(face_bboxes),
                                                         len(source_bboxes)),
                img2)
-    cv2.imwrite('Filter Face, {} Face, {} BBoxes.jpg'.format(len(face_bboxes),
+    cv2.imwrite('Filter Face, {} Face, {} BBoxes.png'.format(len(face_bboxes),
                                                              len(source_bboxes)),
                 img2)
 
@@ -115,7 +115,7 @@ def bbox_visualization(img_path='imgs/demo.jpg',
                              single_face_center=False)
     bbox = ret2[0]
     cv2.imshow("ret2", img[bbox[1]: bbox[3] + 1, bbox[0]: bbox[2] + 1, :])
-    cv2.imwrite("ret2.jpg", img[bbox[1]: bbox[3] + 1, bbox[0]: bbox[2] + 1, :])
+    cv2.imwrite("ret2.png", img[bbox[1]: bbox[3] + 1, bbox[0]: bbox[2] + 1, :])
 
     """
     Filter Center Face
@@ -130,7 +130,7 @@ def bbox_visualization(img_path='imgs/demo.jpg',
     cv2.imshow('Filter Center Face, {} Face, {} BBoxes'.format(len(face_bboxes),
                                                                len(source_bboxes)),
                img3)
-    cv2.imwrite('Filter Center Face, {} Face, {} BBoxes.jpg'.format(len(face_bboxes),
+    cv2.imwrite('Filter Center Face, {} Face, {} BBoxes.png'.format(len(face_bboxes),
                                                                     len(source_bboxes)),
                 img3)
 
@@ -138,7 +138,7 @@ def bbox_visualization(img_path='imgs/demo.jpg',
                              single_face_center=True)
     bbox = ret3[0]
     cv2.imshow("ret3", img[bbox[1]: bbox[3] + 1, bbox[0]: bbox[2] + 1, :])
-    cv2.imwrite("ret3.jpg", img[bbox[1]: bbox[3] + 1, bbox[0]: bbox[2] + 1, :])
+    cv2.imwrite("ret3.png", img[bbox[1]: bbox[3] + 1, bbox[0]: bbox[2] + 1, :])
 
     cv2.waitKey()
     cv2.destroyAllWindows()
