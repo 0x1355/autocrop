@@ -66,7 +66,8 @@ class AutoCropper(object):
                                crop_width,
                                crop_height,
                                face_bboxes,
-                               single_face_center=True):
+                               single_face_center=True,
+                               min_step=4):
         """
         See autocrop.utils.generate_bboxes for details
         """
@@ -76,7 +77,8 @@ class AutoCropper(object):
                                crop_width=crop_width,
                                crop_height=crop_height,
                                face_bboxes=face_bboxes,
-                               single_face_center=single_face_center)
+                               single_face_center=single_face_center,
+                               min_step=min_step)
 
     def crop(self,
              rgb_image,
@@ -84,7 +86,9 @@ class AutoCropper(object):
              crop_height=None,
              crop_width=None,
              filter_face=True,
-             single_face_center=True):
+             single_face_center=True,
+             min_size=None,
+             min_step=4):
         """
         Crop the image and return TopK crop results' coordinate: List[list]
         coordinate for each bbox is defined as [xmin ymin xmax ymax]
@@ -96,6 +100,10 @@ class AutoCropper(object):
         :param single_face_center: bool
                         default True, face bbox will in anchor box width center if only
                         one face in the anchor bbox
+        :param min_size: int: minimum size in pixels for the shorter edge of crop
+                        None means no minimum size constraint
+        :param min_step: int: step size for anchor box generation grid (default 4)
+                        Smaller values generate more candidates but are slower
         :return:
             cropped bboxes:
             List[list[4]] list[4] : [xmin ymin xmax ymax]
@@ -111,13 +119,31 @@ class AutoCropper(object):
                                                                   crop_height=crop_height,
                                                                   crop_width=crop_width,
                                                                   face_bboxes=face_bboxes,
-                                                                  single_face_center=single_face_center)
+                                                                  single_face_center=single_face_center,
+                                                                  min_step=min_step)
+
+        # Filter by minimum size if specified
+        if min_size is not None:
+            filtered_trans_bboxes = []
+            filtered_source_bboxes = []
+            for idx, sbbox in enumerate(source_bboxes):
+                width = sbbox[2] - sbbox[0]
+                height = sbbox[3] - sbbox[1]
+                min_dimension = min(width, height)
+                if min_dimension >= min_size:
+                    filtered_trans_bboxes.append(trans_bboxes[idx])
+                    filtered_source_bboxes.append(sbbox)
+            trans_bboxes = filtered_trans_bboxes
+            source_bboxes = filtered_source_bboxes
+
         roi = []
         for idx, tbbox in enumerate(trans_bboxes):
             roi.append([0, *tbbox])
         if not roi:
-            raise ValueError('No suitable candidate box, '
-                             'try to modify the aspect ratio or cancel face detection')
+            error_msg = 'No suitable candidate box, try to modify the aspect ratio or cancel face detection'
+            if min_size is not None:
+                error_msg += f', or reduce min_size (currently {min_size}px)'
+            raise ValueError(error_msg)
         input_img = color_normalization_op(input_img)  # H W 3 RGB format
         id_out = self.eval_rois(input_img, roi)
         select_bboxes = []
