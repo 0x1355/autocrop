@@ -1,8 +1,8 @@
 # auto-crop
 
-Image auto crop toolbox. Supports image cropping with any aspect ratio, based on [face-detection](https://pypi.org/project/face-detection/) and [GAIC: Grid-Anchor-based-Image-Cropping-Pytorch](https://github.com/lld533/Grid-Anchor-based-Image-Cropping-Pytorch). 
+Image auto crop toolbox. Supports image cropping with any aspect ratio, based on [face-detection](https://pypi.org/project/face-detection/) and [GAIC: Grid-Anchor-based-Image-Cropping-Pytorch](https://github.com/lld533/Grid-Anchor-based-Image-Cropping-Pytorch).
 
-**This project only supports python3 and pytorch > 1.0**
+**This project supports Python 3 and PyTorch >= 2.0** (tested up to PyTorch 2.9.0 with CUDA 12.8)
 
 ## Contents
 
@@ -56,7 +56,7 @@ autocropper = cropper.AutoCropper(model='mobilenetv2', # 'mobilenetv2' or 'shuff
                                   use_face_detector=True) # Use Face Detector to filter RoIs
 ```
 
-Then, use cropper to crop RGB formate image. The selectable parameters are the number of cropping results, the aspect ration and whether to used face detection results to assist in generating RoIs. `crop_ret` is a list with size`topK x 4` ,  Each cropping result is encoded as `[xmin, ymin, xmax, ymax]` in pixel coordinate system.
+Then, use cropper to crop RGB format image. The selectable parameters are the number of cropping results, the aspect ratio and whether to use face detection results to assist in generating RoIs. `crop_ret` is a list with size `topK x 4`, where each cropping result is encoded as `[xmin, ymin, xmax, ymax]` in pixel coordinate system.
 
 ```python
 import cv2
@@ -69,7 +69,26 @@ crop_ret = autocropper.crop(img_,
                             crop_height=1,
                             crop_width=1,
                             filter_face=True, # True: Crop result will not contain half face
-                            single_face_center=True) # True: face in the crop result's width center
+                            single_face_center=True, # True: face in the crop result's width center
+                            min_size=None, # Optional: minimum size in pixels for shorter edge
+                            min_step=4) # Optional: anchor box generation step size (smaller = more candidates)
+```
+
+### Advanced Parameters
+
+**`min_size`** (default: `None`): Minimum size in pixels for the shorter edge of the crop. Useful for ensuring crops meet quality/resolution requirements.
+
+```python
+# Only return crops where the shorter dimension is at least 400px
+crop_ret = autocropper.crop(img_, topK=4, crop_height=1, crop_width=1, min_size=400)
+```
+
+**`min_step`** (default: `4`): Controls the granularity of the anchor box generation grid. Smaller values generate more candidate positions but are slightly slower.
+
+```python
+# Use finer grid for more candidates (useful with min_size filtering)
+crop_ret = autocropper.crop(img_, topK=4, crop_height=1, crop_width=1,
+                            min_size=500, min_step=2)
 ```
 
 You can visualize the cropping results
