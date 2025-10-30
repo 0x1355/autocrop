@@ -1,5 +1,6 @@
-#include <THC/THC.h>
 #include <math.h>
+#include <cuda_runtime.h>
+#include <c10/cuda/CUDAStream.h>
 #include "rod_align_kernel.h"
 #include "rod_align_cuda.h"
 
@@ -41,7 +42,7 @@ int rod_align_forward_cuda(int aligned_height, int aligned_width, float spatial_
     int data_width = feat_sz[3];
     int num_channels = feat_sz[1];
 
-    cudaStream_t stream = at::cuda::getCurrentCUDAStream();
+    cudaStream_t stream = c10::cuda::getCurrentCUDAStream().stream();
 
     RODAlignForwardLaucher(
         data_flat, spatial_scale, num_rois, data_height,
@@ -90,7 +91,7 @@ int rod_align_backward_cuda(int aligned_height, int aligned_width, float spatial
     int data_width = grad_sz[3];
     int num_channels = grad_sz[1];
 
-    cudaStream_t stream = at::cuda::getCurrentCUDAStream();
+    cudaStream_t stream = c10::cuda::getCurrentCUDAStream().stream();
     RODAlignBackwardLaucher(
         top_grad_flat, spatial_scale, batch_size, num_rois, data_height,
         data_width, num_channels, aligned_height,

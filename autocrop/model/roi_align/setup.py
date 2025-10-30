@@ -18,7 +18,7 @@ if torch.cuda.is_available():
             CUDAExtension(
                 name='roi_align_api',
                 sources=['src/roi_align_cuda.cpp', 'src/roi_align_kernel.cu'],
-                include_dirs=[current_dir] + torch.utils.cpp_extension.include_paths(cuda=True)
+                include_dirs=[current_dir] + torch.utils.cpp_extension.include_paths(device_type='cuda')
             )
         ],
         cmdclass={
@@ -31,7 +31,7 @@ else:
             CppExtension(
                 name='roi_align_api',
                 sources=['src/roi_align.cpp'],
-                include_dirs=[current_dir] + torch.utils.cpp_extension.include_paths(cuda=False)
+                include_dirs=[current_dir] + torch.utils.cpp_extension.include_paths(device_type='cpu')
             )
         ],
         cmdclass={

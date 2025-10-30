@@ -1,5 +1,6 @@
-#include <THC/THC.h>
 #include <math.h>
+#include <cuda_runtime.h>
+#include <c10/cuda/CUDAStream.h>
 #include <torch/extension.h>
 #include "roi_align_kernel.h"
 
@@ -40,7 +41,7 @@ int roi_align_forward_cuda(int aligned_height, int aligned_width, float spatial_
     int num_channels = feat_sz[1];
 
 
-    cudaStream_t stream = at::cuda::getCurrentCUDAStream();
+    cudaStream_t stream = c10::cuda::getCurrentCUDAStream().stream();
 
     ROIAlignForwardLaucher(
         data_flat, spatial_scale, num_rois, data_height,
@@ -89,7 +90,7 @@ int roi_align_backward_cuda(int aligned_height, int aligned_width, float spatial
     int data_width = grad_sz[3];
     int num_channels = grad_sz[1];
 
-    cudaStream_t stream = at::cuda::getCurrentCUDAStream();
+    cudaStream_t stream = c10::cuda::getCurrentCUDAStream().stream();
     ROIAlignBackwardLaucher(
         top_grad_flat, spatial_scale, batch_size, num_rois, data_height,
         data_width, num_channels, aligned_height,

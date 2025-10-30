@@ -73,25 +73,25 @@ def generate_ext():
             sources=['autocrop/model/roi_align/src/roi_align_cuda.cpp',
                      'autocrop/model/roi_align/src/roi_align_kernel.cu'],
             include_dirs=[current_dir, rod_src_path, roi_src_path] +
-                         torch.utils.cpp_extension.include_paths(cuda=True)
+                         torch.utils.cpp_extension.include_paths(device_type='cuda')
         )
         rod_align = CUDAExtension(
             name='rod_align_api',
             sources=['autocrop/model/rod_align/src/rod_align_cuda.cpp',
                      'autocrop/model/rod_align/src/rod_align_kernel.cu'],
             include_dirs=[current_dir, rod_src_path, roi_src_path]
-                         + torch.utils.cpp_extension.include_paths(cuda=True)
+                         + torch.utils.cpp_extension.include_paths(device_type='cuda')
         )
     else:
         roi_align = CppExtension(name='roi_align_api',
                                  sources=['autocrop/model/roi_align/src/roi_align.cpp'],
                                  include_dirs=[current_dir, rod_src_path, roi_src_path]
-                                              + torch.utils.cpp_extension.include_paths(cuda=False)
+                                              + torch.utils.cpp_extension.include_paths(device_type='cpu')
                                  )
         rod_align = CppExtension(name='rod_align_api',
                                  sources=['autocrop/model/rod_align/src/rod_align.cpp'],
                                  include_dirs=[current_dir, rod_src_path, roi_src_path]
-                                              + torch.utils.cpp_extension.include_paths(cuda=False)
+                                              + torch.utils.cpp_extension.include_paths(device_type='cpu')
                                  )
 
     ext_m = [roi_align, rod_align]

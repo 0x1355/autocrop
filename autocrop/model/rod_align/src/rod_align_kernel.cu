@@ -1,4 +1,5 @@
 #include <float.h>
+#include <stdio.h>
 #include "rod_align_kernel.h"
 
 #define CUDA_1D_KERNEL_LOOP(i, n)                            \
