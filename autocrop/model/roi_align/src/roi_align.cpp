@@ -1,4 +1,4 @@
-#include <TH/TH.h>
+#include <torch/extension.h>
 #include <math.h>
 //#include <omp.h>
 #include "roi_align.h"
